@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "363929636451",
+    "project_id": "addis-chemico-corporation",
+    "storage_bucket": "addis-chemico-corporation.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:363929636451:android:8f690c3843cc50edcff256",
+        "android_client_info": {
+          "package_name": "com.breezefsmaddischemicocorporation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "363929636451-tekl16m70vgvq57046gd5rpfqehjeor8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-uLq8qeR8JPWYjutp2gOHhttSAju4UA0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "363929636451-tekl16m70vgvq57046gd5rpfqehjeor8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

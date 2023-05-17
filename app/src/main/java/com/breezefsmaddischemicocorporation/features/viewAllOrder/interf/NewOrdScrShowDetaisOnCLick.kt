@@ -1,0 +1,5 @@
+package com.breezefsmaddischemicocorporation.features.viewAllOrder.interf
+
+interface NewOrdScrShowDetaisOnCLick {
+    fun getOrderID(orderID: String,orderDate:String)
+}
