@@ -4898,6 +4898,9 @@ class DashboardFragment : BaseFragment(), View.OnClickListener, HBRecorderListen
                                 if (configResponse.IsAttachmentAvailableForCurrentStock != null)
                                     Pref.IsAttachmentAvailableForCurrentStock = configResponse.IsAttachmentAvailableForCurrentStock!!
                                 // end rev 13.0
+
+                                if (configResponse.IsShowReimbursementTypeInAttendance != null)
+                                    Pref.IsShowReimbursementTypeInAttendance = configResponse.IsShowReimbursementTypeInAttendance!!
                             }
                             BaseActivity.isApiInitiated = false
                             /*API_Optimization 02-03-2022*/

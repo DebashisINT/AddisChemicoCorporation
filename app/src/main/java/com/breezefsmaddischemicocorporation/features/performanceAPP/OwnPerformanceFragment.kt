@@ -368,7 +368,7 @@ class OwnPerformanceFragment: BaseFragment(), View.OnClickListener {
             val projectName = Paragraph(ReportName + ":", font)
             projectName.alignment = Element.ALIGN_CENTER
             projectName.spacingAfter = 5f
-            document.add(projectName)
+//            document.add(projectName)
 
             if (ReportName.contains("Attendance REPORT")) {
                 ll_attend_view.isDrawingCacheEnabled = true
@@ -432,7 +432,7 @@ class OwnPerformanceFragment: BaseFragment(), View.OnClickListener {
                 }
                 document.add(img)
             }
-            else if(ReportName.contains("Last 10 Orders")){
+            else if(ReportName.contains("Recent 10 Orders")){
                 ll_last10order_frag_own.isDrawingCacheEnabled = true
                 var bitM: Bitmap = Bitmap.createBitmap(ll_last10order_frag_own.getDrawingCache())
                 ll_last10order_frag_own.isDrawingCacheEnabled = false
@@ -555,7 +555,7 @@ class OwnPerformanceFragment: BaseFragment(), View.OnClickListener {
                 loadShopTypeList()
             }
             R.id.iv_share_last10 ->{
-                ShareDataAsPdf("Last 10 Orders")
+                ShareDataAsPdf("Recent 10 Orders")
             }
             R.id.tv_frag_own_performnace_sel_party ->{
                 loadPartyList()

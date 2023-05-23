@@ -3028,6 +3028,17 @@ class AddShopFragment : BaseFragment(), View.OnClickListener {
             }else if(dist >= 85.0){
                 shopActivityEntity.stationCode = "2"
             }
+
+            if(Pref.IsShowReimbursementTypeInAttendance && Pref.isExpenseFeatureAvailable){
+                if(Pref.selectedVisitStationName.contains("in",ignoreCase = true)){
+                    shopActivityEntity.stationCode = "0"
+                }else if(Pref.selectedVisitStationName.contains("ex",ignoreCase = true)){
+                    shopActivityEntity.stationCode = "1"
+                }else if(Pref.selectedVisitStationName.contains("out",ignoreCase = true)){
+                    shopActivityEntity.stationCode = "2"
+                }
+            }
+
             Timber.d("dist_cal ${shopActivityEntity.distFromProfileAddrKms}   loc1 ${profileAddr.latitude} ${profileAddr.longitude}  loc2  ${shopAddr.latitude} ${shopAddr.longitude}")
         }catch (ex:Exception){
             ex.printStackTrace()
@@ -4213,14 +4224,25 @@ class AddShopFragment : BaseFragment(), View.OnClickListener {
         }
     }
     // 5.0 AddShopFragment AppV 4.0.7  add feedback voice added mantis 0025684 start
+    /*private fun startVoiceInput() {
+        val intent: Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,"hi")
+        //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,Locale.ENGLISH)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,"en-US")
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hello, How can I help you?")
+        try {
+            startActivityForResult(intent, 7009)
+        } catch (a: ActivityNotFoundException) {
+            a.printStackTrace()
+        }
+    }*/
     private fun startVoiceInput() {
         val intent: Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-        intent.putExtra(
-            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-        )
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,"en-US")
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US")
         //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,"hi")
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,Locale.ENGLISH)
+        //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,Locale.ENGLISH)
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hello, How can I help you?")
         try {
             startActivityForResult(intent, 7009)

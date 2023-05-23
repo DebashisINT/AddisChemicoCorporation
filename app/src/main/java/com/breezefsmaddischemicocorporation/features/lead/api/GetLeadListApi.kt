@@ -40,7 +40,7 @@ interface GetLeadListApi {
     fun submitTaskListAPI(@Body list: AddTaskReq?): Observable<BaseResponse>
 
     @FormUrlEncoded
-    @POST("")
+    @POST("Task/GetTaskDetailList")
     fun viewTaskList(@Field("task_id") crm_id: String): Observable<TaskViewRes>
 
     @POST("Task/EditTaskDetailList")

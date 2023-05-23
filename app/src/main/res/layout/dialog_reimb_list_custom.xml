@@ -55,7 +55,8 @@
         android:paddingBottom="@dimen/_3sdp"
         android:paddingRight="@dimen/_5sdp"
         android:paddingTop="@dimen/_5sdp"
-        android:textSize="@dimen/_12sdp" />
+        android:textSize="@dimen/_12sdp"
+        android:visibility="gone"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_dialog_reimb_list"

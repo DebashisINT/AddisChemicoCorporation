@@ -110,15 +110,15 @@ interface AddShopApi {
 
     // start 1.0 AddShopApi rev mantis 26013 saheli v 4.0.8 15-05-2023
     @Multipart
-    @POST("")
+    @POST("CurrentStockImageInfo/SaveCurrentStockImage1")
     fun UploadStockAttachImage1(@Query("data") addImageupload: String, @Part competitor_img: MultipartBody.Part?): Observable<BaseResponse>
 
     @Multipart
-    @POST("")
+    @POST("CurrentStockImageInfo/SaveCurrentStockImage2")
     fun UploadStockAttachImage2(@Query("data") addImageupload: String, @Part competitor_img: MultipartBody.Part?): Observable<BaseResponse>
 
     @FormUrlEncoded
-    @POST("")
+    @POST("Stock/CurrentStockImageLink")
     fun getStockWiseimagelist(@Field("stock_id") shop_id: String,@Field("user_id") user_id: String,@Field("session_token") session_token: String): Observable<ImagestockwiseListResponse>
 
     // end 1.0 AddShopApi rev mantis 26013 saheli v 4.0.8 15-05-2023

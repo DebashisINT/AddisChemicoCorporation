@@ -173,7 +173,8 @@ import java.util.concurrent.ExecutionException
 // 12.0  LoginActivity AppV 4.0.8 Saheli    08/05/2023  26023
 // 13.0  LoginActivity AppV 4.1.3 Suman    08/05/2023  26047
 // 15.0  LoginActivity AppV 4.1.3 Suman    11/05/2023  26099
-// 14.0  LoginActivity AppV 4.0.8 Saheli    08/05/2023  0026101
+// 14.0  LoginActivity AppV 4.0.3 Saheli    08/05/2023  0026101
+// 15.0  LoginActivity AppV 4.1.3 Suman    17/05/2023  26119
 
 class LoginActivity : BaseActivity(), View.OnClickListener, LocationListener {
 
@@ -679,6 +680,10 @@ class LoginActivity : BaseActivity(), View.OnClickListener, LocationListener {
                                 if (configResponse.IsAttachmentAvailableForCurrentStock != null)
                                     Pref.IsAttachmentAvailableForCurrentStock = configResponse.IsAttachmentAvailableForCurrentStock!!
                                 // end rev 14.0
+                                //Begin 15.0  LoginActivity AppV 4.1.3 Suman    17/05/2023  26119
+                                if (configResponse.IsShowReimbursementTypeInAttendance != null)
+                                    Pref.IsShowReimbursementTypeInAttendance = configResponse.IsShowReimbursementTypeInAttendance!!
+                                //End of 15.0  LoginActivity AppV 4.1.3 Suman    17/05/2023  26119
 
                                 /*if (configResponse.willShowUpdateDayPlan != null)
                                     Pref.willShowUpdateDayPlan = configResponse.willShowUpdateDayPlan!!
@@ -3703,6 +3708,9 @@ class LoginActivity : BaseActivity(), View.OnClickListener, LocationListener {
                          Timber.plant(FileLoggingTree())
                      }
                  }*/
+
+                Pref.selectedVisitStationID=""
+                Pref.selectedVisitStationName=""
 
                 Timber.d("Login btn clicked ${AppUtils.getCurrentDateTime()}")
                 val stat = StatFs(Environment.getExternalStorageDirectory().path)

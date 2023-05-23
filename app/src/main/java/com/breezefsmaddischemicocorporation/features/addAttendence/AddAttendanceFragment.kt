@@ -118,6 +118,7 @@ import kotlin.collections.ArrayList
 // 4.0 AddAttendanceFragment AppV 4.0.8 Suman    07/04/2023 Attendance beat selection validation updation mantis 0025782
 // Rev 5.0 AddAttendanceFragment AppV 4.0.8 Suman    24/04/2023 Beat selection updation 0025898
 // Rev 6.0 AddAttendanceFragment AppV 4.0.8 Suman    27/04/2023 beat flow updation 0025955
+// Rev 7.0 AddAttendanceFragment AppV 4.1.3 Suman    17/05/2023 beat flow updation 26118
 
 class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog.OnDateSetListener, OnMapReadyCallback {
 
@@ -200,6 +201,11 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
     private var endDate = ""
     private var leaveId = ""
     private var mbeatId = ""
+
+    private var selectedVisitStationID = ""
+    private var selectedVisitStationName = ""
+    private var selectedAreaID = ""
+    private var selectedAreaName = ""
 
     private lateinit var ll_target_value: LinearLayout
     private lateinit var rv_primary_value_list: RecyclerView
@@ -337,7 +343,7 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
         card_root_joint_team_sel.visibility = View.GONE
         card_root_joint_visit_check.visibility = View.GONE
 
-        if(Pref.IsShowReimbursementTypeInAttendance){
+        if(Pref.IsShowReimbursementTypeInAttendance && Pref.isExpenseFeatureAvailable){
             cv_reimbursement.visibility = View.VISIBLE
         }else{
             cv_reimbursement.visibility = View.GONE
@@ -1709,30 +1715,7 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
                     iv_reimb_type_dropdown.isSelected = true
                     ll_reimb_type_list.visibility = View.VISIBLE
                 }
-
-                var mReimbList : ArrayList<ReimbListModel> = ArrayList()
-                mReimbList.add(ReimbListModel("1","In station"))
-                mReimbList.add(ReimbListModel("2","Ex station"))
-                mReimbList.add(ReimbListModel("3","Out station"))
-
-                /*if (mReimbList != null && mReimbList.isNotEmpty()) {
-                    ReimbursementListCustomDialog.newInstance(mReimbList as ArrayList<ReimbListModel>) {
-                        Toaster.msgShort(mContext,it.visit_location)
-                    }.show((mContext as DashboardActivity).supportFragmentManager, "")
-                } else {
-                    Toaster.msgShort(mContext, "No Product Found")
-                }*/
-
-                var adapter : ReimbursementListAdapter = ReimbursementListAdapter(mContext, mReimbList!!,object : ReimbListOnClick {
-                    override fun reimbOnClick(obj: ReimbListModel) {
-                        if(obj.visit_location.contains("ex",ignoreCase = true)){
-                            areaLocationList()
-                        }
-                    }
-                })
-                rv_reimb_type_list.layoutManager = LinearLayoutManager(mContext, LinearLayout.VERTICAL, false)
-                rv_reimb_type_list.adapter = adapter
-
+                getVisitType()
             }
 
             R.id.cv_dd_root->{
@@ -2040,6 +2023,16 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
                 isBeatPresent = true
             }else{
                 isBeatPresent = false
+            }
+        }
+
+        if(Pref.IsShowReimbursementTypeInAttendance && Pref.isExpenseFeatureAvailable){
+            if(selectedVisitStationID.equals("")){
+                (mContext as DashboardActivity).showSnackMessage("Please select Reimbursement type.")
+                return
+            }else if(selectedVisitStationName.contains("ex",ignoreCase = true) && selectedAreaID.equals("")){
+                (mContext as DashboardActivity).showSnackMessage("Please select Area type.")
+                return
             }
         }
 
@@ -2464,6 +2457,16 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
 
         addAttendenceModel.beat_id="0"
 
+        //Begin Rev 7.0 AddAttendanceFragment AppV 4.1.3 Suman    17/05/2023 beat flow updation 26118
+        addAttendenceModel.visit_location_id = selectedVisitStationID
+        addAttendenceModel.area_location_id = selectedAreaID
+        if(addAttendenceModel.visit_location_id.equals("")){
+            addAttendenceModel.visit_location_id = "0"
+        }
+        if(addAttendenceModel.area_location_id.equals("")){
+            addAttendenceModel.area_location_id = "0"
+        }
+        //End of Rev 7.0 AddAttendanceFragment AppV 4.1.3 Suman    17/05/2023 beat flow updation 26118
 
         val repository = AddAttendenceRepoProvider.addAttendenceRepo()
         progress_wheel.spin()
@@ -3005,6 +3008,17 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
         Timber.d("to_id----------> " + addAttendenceModel.to_id)
         Timber.d("distance----------> " + addAttendenceModel.distance)
         Timber.d("======End AddAttendance Input Params======")
+
+        //Begin Rev 7.0 AddAttendanceFragment AppV 4.1.3 Suman    17/05/2023 beat flow updation 26118
+        addAttendenceModel.visit_location_id = selectedVisitStationID
+        addAttendenceModel.area_location_id = selectedAreaID
+        if(addAttendenceModel.visit_location_id.equals("")){
+            addAttendenceModel.visit_location_id = "0"
+        }
+        if(addAttendenceModel.area_location_id.equals("")){
+            addAttendenceModel.area_location_id = "0"
+        }
+        //End of Rev 7.0 AddAttendanceFragment AppV 4.1.3 Suman    17/05/2023 beat flow updation 26118
 
         val repository = AddAttendenceRepoProvider.addAttendenceRepo()
         progress_wheel.spin()
@@ -3826,6 +3840,72 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
 
     }
 
+    // new work
+
+    private fun getVisitType(){
+        if (!AppUtils.isOnline(mContext)) {
+            (mContext as DashboardActivity).showSnackMessage(getString(R.string.no_internet))
+            return
+        }
+
+        val repository = RouteRepoProvider.routeListRepoProvider()
+        progress_wheel.spin()
+        BaseActivity.compositeDisposable.add(
+            repository.getVisitLocationList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({ result ->
+                    val response = result as VisitLocationListResponse
+                    progress_wheel.stopSpinning()
+                    if (response.status == NetworkConstant.SUCCESS && response.visit_location_list.size>0){
+                        var mList  = response.visit_location_list
+                        doAsync {
+                            var mReimbList : ArrayList<ReimbListModel> = ArrayList()
+                            for(i in 0..mList.size-1){
+                                mReimbList.add(ReimbListModel(mList.get(i).id.toString(),mList.get(i).visit_location.toString()))
+                            }
+                            uiThread {
+                                showVisitTypeData(mReimbList)
+                            }
+                        }
+                    }else{
+                        progress_wheel.stopSpinning()
+                        Toaster.msgShort(mContext,"No data found.")
+                    }
+                }, { error ->
+                    error.printStackTrace()
+                    progress_wheel.stopSpinning()
+                    Toaster.msgShort(mContext,getString(R.string.something_went_wrong))
+                })
+        )
+    }
+
+    @SuppressLint("WrongConstant")
+    private fun showVisitTypeData(mReimbList : ArrayList<ReimbListModel>){
+        var adapter : ReimbursementListAdapter = ReimbursementListAdapter(mContext, mReimbList!!,object : ReimbListOnClick {
+            override fun reimbOnClick(obj: ReimbListModel) {
+                if(obj.isSelected){
+                    tv_reimbursement_type.text = obj.visit_location
+                    selectedVisitStationID = obj.id
+                    selectedVisitStationName = obj.visit_location
+                }else{
+                    tv_reimbursement_type.text = ""
+                    selectedVisitStationID = ""
+                    selectedVisitStationName = ""
+                }
+
+                Pref.selectedVisitStationID = selectedVisitStationID
+                Pref.selectedVisitStationName = selectedVisitStationName
+
+                if(obj.visit_location.contains("ex",ignoreCase = true) && obj.isSelected==true){
+                    areaLocationList()
+                }
+            }
+        })
+        rv_reimb_type_list.layoutManager = LinearLayoutManager(mContext, LinearLayout.VERTICAL, false)
+        rv_reimb_type_list.adapter = adapter
+    }
+
     private fun areaLocationList() {
         if (!AppUtils.isOnline(mContext)) {
             (mContext as DashboardActivity).showSnackMessage(getString(R.string.no_internet))
@@ -3834,22 +3914,37 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
         val repository = RouteRepoProvider.routeListRepoProvider()
         progress_wheel.spin()
         BaseActivity.compositeDisposable.add(
-            repository.getLocList()
+            repository.getAreaList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({ result ->
-                    val response = result as LocationListResponseModel
+                    val response = result as AreaListResponse
                     progress_wheel.stopSpinning()
-                    if (response.status == NetworkConstant.SUCCESS){
-                        loc_list = response.loc_list
+                    if (response.status == NetworkConstant.SUCCESS && response.area_list_by_city.size>0){
+                        shopAreaListDialog(response.area_list_by_city)
+                    }else{
+                        progress_wheel.stopSpinning()
+                        Toaster.msgShort(mContext,"No area found.")
                     }
-
-
                 }, { error ->
                     error.printStackTrace()
                     progress_wheel.stopSpinning()
+                    Toaster.msgShort(mContext,getString(R.string.something_went_wrong))
                 })
         )
+    }
+
+    private fun shopAreaListDialog(mList: ArrayList<AreaList>){
+        if (mList != null && mList.isNotEmpty()) {
+              ReimbursementListCustomDialog.newInstance(mList as ArrayList<AreaList>) {
+                  selectedAreaID = it.area_location_id
+                  selectedAreaName = it.area_location_name
+
+                  tv_reimbursement_type.text="$selectedVisitStationName ( $selectedAreaName )"
+              }.show((mContext as DashboardActivity).supportFragmentManager, "")
+        } else {
+                  Toaster.msgShort(mContext, "No Product Found")
+              }
     }
 
 }

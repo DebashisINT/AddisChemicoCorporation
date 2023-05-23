@@ -904,6 +904,8 @@ object Pref : PreferenceHolder() {
 
     //Begin Rev 10.0 Pref AppV 4.0.8 Suman    16/05/2023  mantis 26119
     var IsShowReimbursementTypeInAttendance : Boolean by bindToPreferenceField(false, "IsShowReimbursementTypeInAttendance")
+    var selectedVisitStationID : String by bindToPreferenceField("", "selectedVisitStationID")
+    var selectedVisitStationName : String by bindToPreferenceField("", "selectedVisitStationName")
     //End of Rev 10.0 Pref AppV 4.0.8 Suman    16/05/2023  mantis 26119
 }
 

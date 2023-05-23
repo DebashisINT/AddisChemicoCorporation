@@ -373,13 +373,12 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation, 
             //println("fcm_token " + token.toString());
             Timber.d("token : " + token.toString())
         })
-        println("load_frag " + mFragType.toString() + "     " + Pref.user_id.toString()+" "+Pref.profile_city +" "+Pref.profile_state);
+        println("load_frag " + mFragType.toString() + "     " + Pref.user_id.toString()+" "+Pref.profile_city +" "+Pref.profile_state+" "+Pref.IsShowReimbursementTypeInAttendance);
 
         //val distance = LocationWizard.getDistance(22.4339117,	87.3366233, 22.52156	,87.3279733)
         //Pref.isExpenseFeatureAvailable = false
         Timber.d("dash_frag ends ${AppUtils.getCurrentDateTime()} ${Pref.current_latitude} ${Pref.current_latitude}")
         //AppDatabase.getDBInstance()!!.userLocationDataDao().updateUnknownLocationTest(AppUtils.getCurrentDateForShopActi(),"Unknown",false)
-        Pref.IsShowReimbursementTypeInAttendance = true
 
         if (addToStack) {
             mTransaction.add(R.id.frame_layout_container, getFragInstance(mFragType, initializeObject, true)!!, mFragType.toString())
@@ -1275,7 +1274,7 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation, 
                             }
                             // begin rev 19.0 mantis 0026023
                             else if (intent.getStringExtra("TYPE").equals("ACTIVITYDUETASK", ignoreCase = true)) {
-                                if (getFragment() != null && getFragment() !is LeadFrag)
+                                if (getFragment() != null && getFragment() !is TaskManagementFrag)
                                     loadFragment(FragType.TaskManagementFrag, false, "")
                             }
                             // end rev 19.0 mantis 0026023
@@ -10269,6 +10268,17 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation, 
                 }else if(dist >= 85.0){
                     mShopActivityEntity.stationCode = "2"
                 }
+
+                if(Pref.IsShowReimbursementTypeInAttendance && Pref.isExpenseFeatureAvailable){
+                    if(Pref.selectedVisitStationName.contains("in",ignoreCase = true)){
+                        mShopActivityEntity.stationCode = "0"
+                    }else if(Pref.selectedVisitStationName.contains("ex",ignoreCase = true)){
+                        mShopActivityEntity.stationCode = "1"
+                    }else if(Pref.selectedVisitStationName.contains("out",ignoreCase = true)){
+                        mShopActivityEntity.stationCode = "2"
+                    }
+                }
+
                 Timber.d("dist_cal ${mShopActivityEntity.distFromProfileAddrKms}   loc1 ${profileAddr.latitude} ${profileAddr.longitude}  loc2  ${shopAddr.latitude} ${shopAddr.longitude}")
             }catch (ex:Exception){
                 ex.printStackTrace()

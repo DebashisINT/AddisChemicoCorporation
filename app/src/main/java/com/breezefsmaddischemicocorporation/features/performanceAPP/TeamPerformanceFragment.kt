@@ -272,7 +272,7 @@ class TeamPerformanceFragment: BaseFragment(), View.OnClickListener {
                 loadShopTypeList()
             }
             R.id.iv_share_last10 ->{
-                ShareDataAsPdf("Last 10 Orders")
+                ShareDataAsPdf("Recent 10 Orders")
             }
             R.id.tv_frag_team_performnace_sel_party ->{
                 loadShopDialog()
@@ -555,7 +555,7 @@ class TeamPerformanceFragment: BaseFragment(), View.OnClickListener {
                 }
                 document.add(img)
             }
-            else if(ReportName.contains("Last 10 Orders")){
+            else if(ReportName.contains("Recent 10 Orders")){
                 ll_last10Order.isDrawingCacheEnabled = true
                 var bitM: Bitmap = Bitmap.createBitmap(ll_last10Order.getDrawingCache())
                 ll_last10Order.isDrawingCacheEnabled = false
@@ -765,7 +765,12 @@ class TeamPerformanceFragment: BaseFragment(), View.OnClickListener {
 
                         tv_total_ordervalueshopTypewise_frag_team.setText(("Total Order value \n"+String.format("%.2f",mOrderValue)))
                         tv_totalOrdercount_shoptypewise_frag_team_performance.setText("Total Order Count \n"+String.format("%.2f",mOrderCount))
-                        tv_avgOrderValueshopTypewise_frag_team_performance.setText("Avg Order Value \n"+ String.format("%.2f", (mOrderValue / mOrderCount)))
+                        if(mOrderValue==0.0){
+                            tv_avgOrderValueshopTypewise_frag_team_performance.setText("Avg Order Value \n"+ 0)
+                        }else{
+                            tv_avgOrderValueshopTypewise_frag_team_performance.setText("Avg Order Value \n"+ String.format("%.2f", (mOrderValue / mOrderCount)))
+                        }
+
                     }
                 }
                /* //for (shop in shopList.data!!.shop_list!!.filter { it.type == sel_shopTypeID }) {

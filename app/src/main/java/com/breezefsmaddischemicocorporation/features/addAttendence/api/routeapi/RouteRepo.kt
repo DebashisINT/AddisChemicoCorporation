@@ -1,9 +1,11 @@
 package com.breezefsmaddischemicocorporation.features.addAttendence.api.routeapi
 
 import com.breezefsmaddischemicocorporation.app.Pref
+import com.breezefsmaddischemicocorporation.features.addAttendence.model.AreaListResponse
 import com.breezefsmaddischemicocorporation.features.addAttendence.model.DistanceResponseModel
 import com.breezefsmaddischemicocorporation.features.addAttendence.model.LocationListResponseModel
 import com.breezefsmaddischemicocorporation.features.addAttendence.model.RouteResponseModel
+import com.breezefsmaddischemicocorporation.features.addAttendence.model.VisitLocationListResponse
 import io.reactivex.Observable
 
 /**
@@ -18,6 +20,13 @@ class RouteRepo(val apiService: RouteApi) {
         return apiService.getLocationList(Pref.session_token!!, Pref.user_id!!)
     }
 
+    fun getAreaList(): Observable<AreaListResponse> {
+        return apiService.getAreaList(Pref.session_token!!, Pref.user_id!!,Pref.profile_city!!)
+    }
+
+    fun getVisitLocationList(): Observable<VisitLocationListResponse> {
+        return apiService.getVisitLocationList(Pref.session_token!!)
+    }
 
     fun getDistance(from_id: String, to_id: String): Observable<DistanceResponseModel> {
         return apiService.getDistance(Pref.session_token!!, Pref.user_id!!, from_id, to_id)

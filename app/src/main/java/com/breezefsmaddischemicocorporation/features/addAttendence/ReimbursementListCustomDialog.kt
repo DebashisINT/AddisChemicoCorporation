@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.breezefsmaddischemicocorporation.R
 import com.breezefsmaddischemicocorporation.app.domain.NewOrderProductEntity
+import com.breezefsmaddischemicocorporation.app.utils.AppUtils
+import com.breezefsmaddischemicocorporation.features.addAttendence.model.AreaList
 import com.breezefsmaddischemicocorporation.features.addAttendence.model.ReimbListModel
 import com.breezefsmaddischemicocorporation.features.addAttendence.model.ReimbListOnClick
 import com.breezefsmaddischemicocorporation.features.viewAllOrder.presentation.ProductListNewOrderAdapter
@@ -29,13 +31,13 @@ class ReimbursementListCustomDialog:DialogFragment() {
     private lateinit var crossIV: ImageView
     private lateinit var searchET: AppCustomEditText
     private lateinit var rvList: RecyclerView
-    private  var adapter: ReimbursementListAdapter? = null
+    private  var adapter: AreaListAdapter? = null
     private lateinit var mContext: Context
 
     companion object{
-        private var mList: ArrayList<ReimbListModel>? = null
-        private lateinit var onSelectItem: (ReimbListModel) -> Unit
-        fun newInstance(pList: ArrayList<ReimbListModel>, function: (ReimbListModel) -> Unit): ReimbursementListCustomDialog {
+        private var mList: ArrayList<AreaList>? = null
+        private lateinit var onSelectItem: (AreaList) -> Unit
+        fun newInstance(pList: ArrayList<AreaList>, function: (AreaList) -> Unit): ReimbursementListCustomDialog {
             val dialogFragment = ReimbursementListCustomDialog()
             mList = pList
             onSelectItem = function
@@ -68,9 +70,11 @@ class ReimbursementListCustomDialog:DialogFragment() {
         searchET = v.findViewById(R.id.et_dialog_reimb_search)
         rvList = v.findViewById(R.id.rv_dialog_reimb_list)
         rvList.layoutManager = LinearLayoutManager(mContext)
-        adapter = ReimbursementListAdapter(mContext,mList!!,object : ReimbListOnClick {
-            override fun reimbOnClick(obj: ReimbListModel) {
-                dismiss()
+
+        headerTv.text = AppUtils.hiFirstNameText()
+
+        adapter = AreaListAdapter(mContext,mList!!,object : AreaListAdapter.onCLick {
+            override fun onTick(obj: AreaList) {
                 onSelectItem(obj)
             }
         })
@@ -84,7 +88,7 @@ class ReimbursementListCustomDialog:DialogFragment() {
     }
 
     private fun initTextChangeListener() {
-        searchET.addTextChangedListener(object : TextWatcher {
+        /*searchET.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
             }
 
@@ -94,7 +98,7 @@ class ReimbursementListCustomDialog:DialogFragment() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 adapter!!.getFilter().filter(searchET.text.toString().trim())
             }
-        })
+        })*/
     }
 
 }

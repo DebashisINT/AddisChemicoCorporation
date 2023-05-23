@@ -152,6 +152,8 @@ class ConfigFetchResponseModel : BaseResponse() {
 
     var IsAttachmentAvailableForCurrentStock:Boolean?=null// mantis 0026101
 
+    var IsShowReimbursementTypeInAttendance:Boolean?=null// mantis 26119
+
 
 
 }

@@ -306,6 +306,7 @@ dependencies {
     implementation 'com.github.AAChartModel:AAChartCore-Kotlin:7.2.0'
     // lifecycle for room mantis 0025753
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
+
 }
 
 

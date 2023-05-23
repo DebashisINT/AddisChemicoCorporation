@@ -431,7 +431,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="0"
                                 android:gravity="center|start"
-                                android:text="Last 10 Orders"
+                                android:text="Recent 10 Orders"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_12sdp" />
 
@@ -440,7 +440,8 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center|start"
-                                android:text="(Based on type of Shops)"
+                                android:visibility="invisible"
+                                android:text=""
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_9sdp" />
 
@@ -921,6 +922,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
+                    android:visibility="gone"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="@dimen/_10sdp"
                     app:cardElevation="@dimen/_5sdp">
